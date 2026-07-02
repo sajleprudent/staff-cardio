@@ -12,12 +12,11 @@
     --bg:#F5F8F8; --surface:#FFFFFF; --ink:#152A2E; --muted:#5C7377;
     --primary:#0E7A73; --primary-soft:#E3F1EF; --urgent:#D5453C; --urgent-soft:#FCEBEA;
     --border:#DFE8E8; --ok:#2E7D32; --ok-soft:#E8F3E9; --wait:#8A6D1E; --wait-soft:#FBF3DC;
-    --accent2:#3A6EA5; --accent3:#B07AA8;
     font-size:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,-apple-system,sans-serif;padding:28px 20px 60px}
-  .wrap{max-width:1180px;margin:0 auto}
+  .wrap{max-width:1200px;margin:0 auto}
 
   header{margin-bottom:18px}
   .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);font-weight:600}
@@ -25,59 +24,65 @@
   .ecg{display:block;margin-top:10px;width:100%;max-width:420px}
   .ecg path{stroke:var(--primary);stroke-width:2;fill:none;opacity:.55}
 
-  /* Zone de chargement du fichier */
-  .dropzone{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:var(--surface);border:1.5px dashed var(--primary);border-radius:14px;padding:16px 18px;margin-bottom:18px;transition:background .15s}
+  .dropzone{display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--surface);border:1.5px dashed var(--primary);border-radius:14px;padding:16px 18px;margin-bottom:12px;transition:background .15s}
   .dropzone.over{background:var(--primary-soft)}
-  .dz-icon{width:36px;height:36px;flex:none;stroke:var(--primary)}
-  .dz-text{flex:1 1 240px;min-width:0}
-  .dz-text strong{display:block;font-size:.95rem}
-  .dz-text span{font-size:.8rem;color:var(--muted)}
-  .btn{padding:10px 18px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer}
+  .dz-icon{width:34px;height:34px;flex:none;stroke:var(--primary)}
+  .dz-text{flex:1 1 220px;min-width:0}
+  .dz-text strong{display:block;font-size:.93rem}
+  .dz-text span{font-size:.78rem;color:var(--muted)}
+  .btn{padding:10px 16px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer;white-space:nowrap}
   .btn:hover{filter:brightness(1.08)}
   .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .btn.secondary{background:var(--surface);color:var(--primary);border:1.5px solid var(--primary)}
+  .btn.danger{background:var(--urgent)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
   .filestatus{font-size:.8rem;color:var(--muted);width:100%}
   .filestatus.loaded{color:var(--ok);font-weight:600}
   .filestatus.error{color:var(--urgent);font-weight:600}
-  .demo-banner{background:var(--wait-soft);color:var(--wait);border-radius:10px;padding:10px 14px;font-size:.83rem;margin-bottom:16px}
+  .demo-banner{background:var(--wait-soft);color:var(--wait);border-radius:10px;padding:10px 14px;font-size:.83rem;margin-bottom:12px}
 
-  /* Onglets */
+  .savebar{display:none;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--wait);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+  .savebar.visible{display:flex}
+  .savebar .msg{flex:1 1 200px;font-size:.85rem}
+  .savebar .msg strong{color:var(--wait)}
+
   .tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--border)}
   .tab{padding:10px 18px;border:none;background:none;font:inherit;font-size:.92rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1px}
   .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
-  .tab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   .panel{display:none}
   .panel.active{display:block}
 
-  /* Liste */
-  .toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
-  .searchbox{flex:1 1 280px;position:relative}
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+  .searchbox{flex:1 1 260px;position:relative}
   .searchbox svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted)}
   .searchbox input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.95rem;background:var(--surface);color:var(--ink)}
   .searchbox input:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:var(--primary)}
-  select{padding:12px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.9rem;background:var(--surface);color:var(--ink);cursor:pointer}
-  select:focus{outline:2px solid var(--primary);outline-offset:-1px}
+  select,input[type=date],input[type=number],input[type=text]{padding:11px 13px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.9rem;background:var(--surface);color:var(--ink)}
+  select{cursor:pointer}
+  select:focus,input:focus{outline:2px solid var(--primary);outline-offset:-1px}
 
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font:inherit;font-size:.88rem;font-weight:500;color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font:inherit;font-size:.88rem;font-weight:500;color:var(--ink);cursor:pointer}
   .chip:hover{border-color:var(--primary)}
   .chip .count{font-family:'Spline Sans Mono',monospace;font-size:.75rem;background:var(--bg);border-radius:999px;padding:2px 8px;color:var(--muted)}
   .chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
   .chip.active .count{background:rgba(255,255,255,.2);color:#fff}
-  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
   .meta{font-size:.85rem;color:var(--muted);margin-bottom:10px}
   .meta strong{color:var(--ink)}
 
   .tablecard{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:auto}
-  table{width:100%;border-collapse:collapse;min-width:1000px}
+  table{width:100%;border-collapse:collapse;min-width:1080px}
   th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
-  td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:.9rem;vertical-align:top}
+  td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:.9rem;vertical-align:top}
   tr:last-child td{border-bottom:none}
   tbody tr:hover{background:var(--primary-soft)}
   .pname{font-weight:600;white-space:nowrap}
-  .diag{max-width:260px;color:var(--muted);font-size:.85rem;line-height:1.35}
+  .diag{max-width:240px;color:var(--muted);font-size:.85rem;line-height:1.35}
   .mono{font-family:'Spline Sans Mono',monospace;font-size:.82rem;white-space:nowrap}
   .doc{white-space:nowrap;font-weight:500}
+  .editbtn{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 10px;font:inherit;font-size:.78rem;font-weight:600;color:var(--primary);cursor:pointer;white-space:nowrap}
+  .editbtn:hover{border-color:var(--primary);background:var(--primary-soft)}
 
   .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.74rem;font-weight:600;white-space:nowrap}
   .b-urgent{background:var(--urgent-soft);color:var(--urgent)}
@@ -89,7 +94,6 @@
   .empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:.95rem}
   .empty strong{color:var(--ink)}
 
-  /* Dashboard */
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
   .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
   .kpi .label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -105,7 +109,6 @@
   .card h3{font-size:.95rem;font-weight:600;margin-bottom:12px}
   .card h3 small{display:block;font-weight:400;font-size:.75rem;color:var(--muted);margin-top:2px}
   .chartbox{position:relative;height:260px}
-
   .alertlist{list-style:none}
   .alertlist li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.88rem;flex-wrap:wrap}
   .alertlist li:last-child{border-bottom:none}
@@ -113,10 +116,30 @@
   .alertlist .why{color:var(--muted);font-size:.8rem;flex:1 1 100%}
   .noalert{color:var(--muted);font-size:.88rem;padding:8px 0}
 
-  footer{margin-top:20px;font-size:.78rem;color:var(--muted);line-height:1.5}
+  /* Modal d'édition */
+  dialog{border:none;border-radius:16px;padding:0;max-width:640px;width:calc(100% - 32px);max-height:calc(100vh - 60px)}
+  dialog::backdrop{background:rgba(21,42,46,.45)}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--border)}
+  .modal-head h2{font-size:1.1rem;font-weight:700}
+  .modal-body{padding:18px 22px;overflow:auto;max-height:60vh}
+  .modal-foot{display:flex;justify-content:space-between;gap:10px;padding:16px 22px;border-top:1px solid var(--border);flex-wrap:wrap}
+  .modal-foot .right{display:flex;gap:10px;margin-left:auto}
+  .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field.full{grid-column:1 / -1}
+  .field label{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .field input,.field select,.field textarea{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.9rem;width:100%}
+  .field textarea{resize:vertical;min-height:56px}
+  .form-error{color:var(--urgent);font-size:.82rem;font-weight:600;display:none;margin-top:8px}
+  .closex{border:none;background:none;font-size:1.4rem;line-height:1;cursor:pointer;color:var(--muted)}
 
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .25s;z-index:99}
+  .toast.show{opacity:1}
+
+  footer{margin-top:20px;font-size:.78rem;color:var(--muted);line-height:1.5}
   @media (max-width:760px){
     .grid2{grid-template-columns:1fr}
+    .formgrid{grid-template-columns:1fr}
     body{padding:18px 12px 40px}
     h1{font-size:1.3rem}
   }
@@ -138,32 +161,36 @@
     </svg>
     <div class="dz-text">
       <strong>Charger le fichier Excel du staff</strong>
-      <span>Glissez-déposez le fichier .xlsx ici, ou cliquez sur le bouton. La lecture se fait sur votre poste, rien n'est envoyé sur internet.</span>
+      <span id="dzHint">Glissez-déposez le .xlsx, ou utilisez les boutons. Tout reste sur votre poste, rien n'est envoyé sur internet.</span>
     </div>
-    <button class="btn" id="pickBtn">Choisir le fichier</button>
+    <button class="btn" id="openEditBtn" title="Ouvre le fichier et permet d'enregistrer directement dedans (Chrome / Edge)">Ouvrir pour modifier</button>
+    <button class="btn secondary" id="pickBtn">Consulter seulement</button>
     <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm" hidden>
     <div class="filestatus" id="filestatus"></div>
   </div>
 
   <div class="demo-banner" id="demoBanner">Données de démonstration affichées — chargez le fichier Excel réel pour voir les données à jour.</div>
 
+  <div class="savebar" id="savebar">
+    <div class="msg"><strong>Modifications non enregistrées.</strong> <span id="saveHint">Pensez à enregistrer pour mettre à jour le fichier Excel.</span></div>
+    <button class="btn" id="saveBtn">Enregistrer dans le fichier Excel</button>
+    <button class="btn secondary" id="downloadBtn">Télécharger l'Excel mis à jour</button>
+  </div>
+
   <div class="tabs" role="tablist">
     <button class="tab active" data-panel="panel-liste" role="tab">Liste des patients</button>
     <button class="tab" data-panel="panel-dash" role="tab">Tableau de bord</button>
   </div>
 
-  <!-- ONGLET LISTE -->
   <section class="panel active" id="panel-liste">
     <div class="toolbar">
       <div class="searchbox">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         <input id="search" type="search" placeholder="Rechercher un patient, un diagnostic…" aria-label="Rechercher un patient">
       </div>
-      <select id="fStatut" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
-      <select id="fCat" aria-label="Filtrer par catégorie"><option value="">Toutes catégories</option></select>
-      <select id="fCathe" aria-label="Filtrer par cathétérisme">
-        <option value="">Cathétérisme : tous</option><option value="OUI">Cathétérisme : oui</option><option value="NON">Cathétérisme : non</option>
-      </select>
+      <select id="fStatut"><option value="">Tous les statuts</option></select>
+      <select id="fCat"><option value="">Toutes catégories</option></select>
+      <button class="btn" id="addBtn">＋ Ajouter un patient</button>
     </div>
 
     <div class="chips" id="chips" role="group" aria-label="Filtrer par médecin responsable"></div>
@@ -176,7 +203,7 @@
             <th>N°</th><th>Patient</th><th>Âge / Sexe</th><th>Diagnostic</th>
             <th>Écho</th><th>Poids / Taille</th><th>SpO₂</th>
             <th>Médecin</th><th>Statut</th><th>Catégorie</th>
-            <th>Staff</th><th>Décision</th><th>Transfert</th><th>Cathé.</th>
+            <th>Staff</th><th>Décision</th><th>Cathé.</th><th></th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -187,53 +214,78 @@
     </div>
   </section>
 
-  <!-- ONGLET DASHBOARD -->
   <section class="panel" id="panel-dash">
     <div class="kpis" id="kpis"></div>
-
     <div class="grid2">
-      <div class="card">
-        <h3>Patients par médecin <small>répartition selon le statut de staff</small></h3>
-        <div class="chartbox"><canvas id="chDoc"></canvas></div>
-      </div>
-      <div class="card">
-        <h3>Statut des dossiers <small>staffés vs en attente de staff</small></h3>
-        <div class="chartbox"><canvas id="chStatut"></canvas></div>
-      </div>
+      <div class="card"><h3>Patients par médecin <small>répartition selon le statut de staff</small></h3><div class="chartbox"><canvas id="chDoc"></canvas></div></div>
+      <div class="card"><h3>Statut des dossiers <small>staffés vs en attente de staff</small></h3><div class="chartbox"><canvas id="chStatut"></canvas></div></div>
     </div>
-
     <div class="grid2">
-      <div class="card">
-        <h3>Répartition SpO₂ <small>saturation en oxygène par tranche</small></h3>
-        <div class="chartbox"><canvas id="chSpo2"></canvas></div>
-      </div>
-      <div class="card">
-        <h3>Catégorie & cathétérisme <small>proportion de cas urgents et de cathétérismes réalisés</small></h3>
-        <div class="chartbox"><canvas id="chCat"></canvas></div>
-      </div>
+      <div class="card"><h3>Répartition SpO₂ <small>saturation en oxygène par tranche</small></h3><div class="chartbox"><canvas id="chSpo2"></canvas></div></div>
+      <div class="card"><h3>Cas urgents & cathétérisme <small>croisement des dossiers urgents avec le cathétérisme</small></h3><div class="chartbox"><canvas id="chCat"></canvas></div></div>
     </div>
-
     <div class="grid2">
-      <div class="card">
-        <h3>⚠ Patients à surveiller <small>SpO₂ inférieure à 90 % ou dossier urgent en attente de staff</small></h3>
-        <ul class="alertlist" id="alerts"></ul>
-      </div>
-      <div class="card">
-        <h3>Prochains staffs programmés <small>d'après la colonne « Date de staff »</small></h3>
-        <ul class="alertlist" id="upcoming"></ul>
-      </div>
+      <div class="card"><h3>⚠ Patients à surveiller <small>SpO₂ &lt; 90 % ou dossier urgent en attente de staff</small></h3><ul class="alertlist" id="alerts"></ul></div>
+      <div class="card"><h3>Prochains staffs programmés <small>d'après la colonne « Date de staff »</small></h3><ul class="alertlist" id="upcoming"></ul></div>
     </div>
   </section>
 
-  <footer>
-    Prototype sans serveur : les données sont lues directement depuis le fichier Excel, sur le poste de l'utilisateur.
-    Pour un partage multi-médecins, il suffit de garder le fichier Excel sur un dossier partagé (OneDrive, Google Drive, réseau)
-    et de recharger le fichier dans cette page pour voir la dernière version.
+  <footer id="footer">
+    Mode édition : sur Chrome ou Edge (ordinateur), « Ouvrir pour modifier » permet d'enregistrer directement dans le fichier Excel.
+    Sur les autres navigateurs, utilisez « Télécharger l'Excel mis à jour » puis remplacez l'ancien fichier dans le dossier partagé.
   </footer>
 </div>
 
+<!-- Modal d'édition -->
+<dialog id="editDialog">
+  <div class="modal-head">
+    <h2 id="dlgTitle">Modifier le patient</h2>
+    <button class="closex" id="dlgClose" aria-label="Fermer">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="formgrid">
+      <div class="field"><label for="ef_nom">Nom *</label><input id="ef_nom" type="text"></div>
+      <div class="field"><label for="ef_prenom">Prénom *</label><input id="ef_prenom" type="text"></div>
+      <div class="field"><label for="ef_age">Âge</label><input id="ef_age" type="text" placeholder="ex : 08 ans / 7 mois"></div>
+      <div class="field"><label for="ef_sexe">Sexe</label>
+        <select id="ef_sexe"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>
+      </div>
+      <div class="field full"><label for="ef_diag">Diagnostic</label><textarea id="ef_diag"></textarea></div>
+      <div class="field"><label for="ef_echo">Date écho</label><input id="ef_echo" type="date"></div>
+      <div class="field"><label for="ef_spo2">SpO₂ (%)</label><input id="ef_spo2" type="number" min="0" max="100" step="1" placeholder="ex : 98"></div>
+      <div class="field"><label for="ef_poids">Poids (kg)</label><input id="ef_poids" type="number" min="0" step="0.01"></div>
+      <div class="field"><label for="ef_taille">Taille (cm)</label><input id="ef_taille" type="number" min="0" step="1"></div>
+      <div class="field"><label for="ef_doc">Médecin (opérateur)</label><input id="ef_doc" type="text" list="docList" placeholder="ex : DR KAYA"><datalist id="docList"></datalist></div>
+      <div class="field"><label for="ef_statut">Statut</label>
+        <select id="ef_statut"><option value="En Attente de staff">En Attente de staff</option><option value="Staffé">Staffé</option></select>
+      </div>
+      <div class="field"><label for="ef_staff">Date de staff</label><input id="ef_staff" type="date"></div>
+      <div class="field"><label for="ef_cat">Catégorie</label>
+        <select id="ef_cat"><option value="Normal">Normal</option><option value="URGENT">URGENT</option></select>
+      </div>
+      <div class="field full"><label for="ef_decision">Décision du staff</label><textarea id="ef_decision"></textarea></div>
+      <div class="field"><label for="ef_transfert">Transfert</label><input id="ef_transfert" type="text" list="trList" placeholder="ex : MECENAT / Autres"><datalist id="trList"></datalist></div>
+      <div class="field"><label for="ef_cathe">Cathétérisme cardiaque</label>
+        <select id="ef_cathe"><option value="Non">Non</option><option value="Oui">Oui</option></select>
+      </div>
+      <div class="field full"><label for="ef_complement">Complément de dossier</label><textarea id="ef_complement"></textarea></div>
+    </div>
+    <div class="form-error" id="formError">Le nom et le prénom sont obligatoires.</div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn danger" id="deleteBtn">Supprimer</button>
+    <div class="right">
+      <button class="btn secondary" id="cancelBtn">Annuler</button>
+      <button class="btn" id="okBtn">Valider</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
 <script>
-/* ---------- Données de démo (remplacées au chargement du fichier) ---------- */
+/* ================= Données ================= */
+const DEFAULT_HEADERS = ["N°","NOM","PRENOM","AGE","SEXE","DIAGNOSTIC","DATE ECHO","POIDS","TAILLE","SPO 2","OPERATEUR","STATUT","DATE DE STAFF","CATEGORIE","DECISION DU STAFF","TRANSFERT","COMPLEMENT DE DOSSIER","CATHETERISME CARDIAQUE"];
 const DEMO = [
   {num:1, nom:"BALLA", prenom:"AMADOU", age:"08 ans", sexe:"M", diag:"CIA", echo:new Date(2024,4,6), poids:22, taille:130, spo2:98, doc:"DR SEYE", statut:"En Attente de staff", staff:null, cat:"Normal", decision:"", transfert:"Autres", complement:"", cathe:"Non"},
   {num:2, nom:"DIALLO", prenom:"FATOU", age:"17 ans", sexe:"F", diag:"Bon résultat de RVM + PT", echo:new Date(2024,4,7), poids:47, taille:150, spo2:100, doc:"DR JEFF", statut:"Staffé", staff:new Date(2026,1,6), cat:"URGENT", decision:"XXX", transfert:"MECENAT", complement:"", cathe:"Oui"},
@@ -242,16 +294,21 @@ const DEMO = [
   {num:5, nom:"NDONG", prenom:"DIEUDONNÉ", age:"7 mois", sexe:"M", diag:"HTAP avec PAPs à 88 mm", echo:new Date(2024,4,10), poids:5.14, taille:60, spo2:97, doc:"DR SEYE", statut:"En Attente de staff", staff:null, cat:"Normal", decision:"", transfert:"Autres", complement:"", cathe:"Non"}
 ];
 
-let patients = DEMO.slice();
+let patients = DEMO.map(p=>({...p}));
+let originalHeaders = DEFAULT_HEADERS.slice();
+let sheetName = "Sheet1";
+let sourceFileName = "TABLEAU_DE_SUIVI_PATIENTS_CARDIOLOGIE.xlsx";
+let fileHandle = null;      // File System Access (Chrome/Edge)
 let activeDoc = "";
+let dirty = false;
+let editIndex = -1;         // -1 = nouveau patient
 const charts = {};
 const $ = id => document.getElementById(id);
 const norm = s => (s==null?"":String(s)).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 const clean = s => (s==null?"":String(s)).trim();
+const canDirectSave = "showOpenFilePicker" in window;
 
-/* ---------- Lecture du fichier Excel ---------- */
-/* Les en-têtes sont reconnus par mots-clés : le prototype tolère les espaces,
-   accents et variations de casse ("NOM ", "SPO 2", "DATE DE STAFF", etc.). */
+/* ================= Lecture Excel ================= */
 function headerKey(h){
   const n = norm(h);
   if(n.startsWith("n°")||n==="n"||n==="no"||n==="num") return "num";
@@ -274,152 +331,209 @@ function headerKey(h){
   if(n.includes("cathet")) return "cathe";
   return null;
 }
-
 function asDate(v){
   if(v==null||v==="") return null;
   if(v instanceof Date && !isNaN(v)) return v;
-  if(typeof v === "number"){ // numéro de série Excel
-    const d = new Date(Math.round((v - 25569) * 86400 * 1000));
-    return isNaN(d) ? null : d;
-  }
-  const d = new Date(v);
-  return isNaN(d) ? null : d;
+  if(typeof v==="number"){ const d=new Date(Math.round((v-25569)*86400*1000)); return isNaN(d)?null:d; }
+  const d=new Date(v); return isNaN(d)?null:d;
 }
-
 function asSpo2(v){
   if(v==null||v==="") return null;
-  const n = parseFloat(String(v).replace(",","."));
+  const n=parseFloat(String(v).replace(",","."));
   if(isNaN(n)) return null;
-  return n <= 1.5 ? Math.round(n*100) : Math.round(n); // 0.98 → 98 ; 98 → 98
+  return n<=1.5?Math.round(n*100):Math.round(n);
 }
-
 function parseWorkbook(wb){
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:"", cellDates:true, raw:true});
+  sheetName = wb.SheetNames[0];
+  const ws = wb.Sheets[sheetName];
+  const rows = XLSX.utils.sheet_to_json(ws,{header:1,defval:"",cellDates:true,raw:true});
   if(!rows.length) throw new Error("Feuille vide");
-  const headers = rows[0].map(headerKey);
+  originalHeaders = rows[0].map(h=>clean(h)).filter((h,i)=>h!==""||rows[0].slice(i).some(x=>clean(x)!==""));
+  if(!originalHeaders.length) originalHeaders = DEFAULT_HEADERS.slice();
+  const keys = rows[0].map(headerKey);
   const out = [];
   for(let i=1;i<rows.length;i++){
-    const r = rows[i], o = {};
-    headers.forEach((k,j)=>{ if(k) o[k] = r[j]; });
-    if(!clean(o.nom) && !clean(o.prenom)) continue; // ignorer les lignes vides
+    const r=rows[i], o={};
+    keys.forEach((k,j)=>{ if(k) o[k]=r[j]; });
+    if(!clean(o.nom) && !clean(o.prenom)) continue;
     out.push({
-      num: o.num || out.length+1,
-      nom: clean(o.nom).toUpperCase(),
-      prenom: clean(o.prenom).toUpperCase(),
-      age: clean(o.age),
-      sexe: clean(o.sexe).toUpperCase(),
-      diag: clean(o.diag),
-      echo: asDate(o.echo),
-      poids: o.poids===""?null:parseFloat(String(o.poids).replace(",",".")),
-      taille: o.taille===""?null:parseFloat(String(o.taille).replace(",",".")),
-      spo2: asSpo2(o.spo2),
-      doc: clean(o.doc).toUpperCase(),
-      statut: clean(o.statut),
-      staff: asDate(o.staff),
-      cat: clean(o.cat),
-      decision: clean(o.decision),
-      transfert: clean(o.transfert),
-      complement: clean(o.complement),
-      cathe: clean(o.cathe)
+      num:o.num||out.length+1,
+      nom:clean(o.nom).toUpperCase(), prenom:clean(o.prenom).toUpperCase(),
+      age:clean(o.age), sexe:clean(o.sexe).toUpperCase(), diag:clean(o.diag),
+      echo:asDate(o.echo),
+      poids:o.poids===""?null:parseFloat(String(o.poids).replace(",",".")),
+      taille:o.taille===""?null:parseFloat(String(o.taille).replace(",",".")),
+      spo2:asSpo2(o.spo2),
+      doc:clean(o.doc).toUpperCase(), statut:clean(o.statut),
+      staff:asDate(o.staff), cat:clean(o.cat),
+      decision:clean(o.decision), transfert:clean(o.transfert),
+      complement:clean(o.complement), cathe:clean(o.cathe)
     });
   }
   return out;
 }
+function ingest(buf, name){
+  const wb = XLSX.read(new Uint8Array(buf),{type:"array",cellDates:true});
+  const data = parseWorkbook(wb);
+  if(!data.length) throw new Error("Aucun patient trouvé dans le fichier");
+  patients = data; sourceFileName = name; activeDoc=""; setDirty(false);
+  $("demoBanner").style.display="none";
+  refreshAll();
+}
 
-function loadFile(file){
-  const status = $("filestatus");
-  if(!file){ return; }
-  if(!/\.(xlsx|xls|xlsm)$/i.test(file.name)){
-    status.textContent = "Format non reconnu — choisissez un fichier .xlsx"; status.className = "filestatus error"; return;
-  }
-  const reader = new FileReader();
-  reader.onload = e => {
-    try{
-      const wb = XLSX.read(new Uint8Array(e.target.result), {type:"array", cellDates:true});
-      const data = parseWorkbook(wb);
-      if(!data.length) throw new Error("Aucun patient trouvé dans le fichier");
-      patients = data;
-      activeDoc = "";
-      status.textContent = `✓ ${file.name} — ${data.length} patient(s) chargé(s)`;
-      status.className = "filestatus loaded";
-      $("demoBanner").style.display = "none";
-      refreshAll();
-    }catch(err){
-      status.textContent = "Erreur de lecture : " + err.message;
-      status.className = "filestatus error";
+/* ================= Écriture Excel ================= */
+function buildWorkbook(){
+  const fieldFor = originalHeaders.map(headerKey);
+  const aoa = [originalHeaders.slice()];
+  patients.forEach((p,i)=>{
+    aoa.push(fieldFor.map(k=>{
+      if(!k) return "";
+      switch(k){
+        case "num": return p.num||i+1;
+        case "echo": return p.echo||"";
+        case "staff": return p.staff||"";
+        case "spo2": return p.spo2==null?"":p.spo2/100; // stocké en fraction comme l'original (0,98)
+        case "poids": return p.poids==null?"":p.poids;
+        case "taille": return p.taille==null?"":p.taille;
+        default: return p[k]??"";
+      }
+    }));
+  });
+  const ws = XLSX.utils.aoa_to_sheet(aoa,{cellDates:true});
+  // Formats : dates en jj/mm/aaaa, SpO2 en pourcentage
+  const range = XLSX.utils.decode_range(ws["!ref"]);
+  fieldFor.forEach((k,c)=>{
+    if(k!=="echo"&&k!=="staff"&&k!=="spo2") return;
+    for(let r=1;r<=range.e.r;r++){
+      const cell = ws[XLSX.utils.encode_cell({r,c})];
+      if(!cell||cell.v===""||cell.v==null) continue;
+      cell.z = (k==="spo2") ? "0%" : "dd/mm/yyyy";
     }
+  });
+  ws["!cols"] = originalHeaders.map(h=>({wch:Math.max(12,String(h).length+2)}));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName||"Sheet1");
+  return wb;
+}
+async function saveToFile(){
+  if(!fileHandle){ downloadFile(); return; }
+  try{
+    const out = XLSX.write(buildWorkbook(),{type:"array",bookType:"xlsx"});
+    const writable = await fileHandle.createWritable();
+    await writable.write(new Blob([out],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+    await writable.close();
+    setDirty(false);
+    toast("✓ Fichier Excel enregistré : " + sourceFileName);
+  }catch(err){
+    toast("Enregistrement direct impossible — téléchargement à la place");
+    downloadFile();
+  }
+}
+function downloadFile(){
+  XLSX.writeFile(buildWorkbook(), sourceFileName.replace(/\.(xlsx|xls|xlsm)$/i,"") + "_MAJ.xlsx");
+  setDirty(false);
+  toast("✓ Excel mis à jour téléchargé — remplacez l'ancien fichier dans le dossier partagé");
+}
+
+/* ================= Chargement ================= */
+function loadBlobFile(file){
+  const status=$("filestatus");
+  if(!file) return;
+  if(!/\.(xlsx|xls|xlsm)$/i.test(file.name)){ status.textContent="Format non reconnu — choisissez un fichier .xlsx"; status.className="filestatus error"; return; }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{ ingest(e.target.result, file.name);
+      status.textContent=`✓ ${file.name} — ${patients.length} patient(s) chargé(s)` + (fileHandle?" · mode édition directe":" · les enregistrements passeront par un téléchargement");
+      status.className="filestatus loaded";
+    }catch(err){ status.textContent="Erreur de lecture : "+err.message; status.className="filestatus error"; }
   };
   reader.readAsArrayBuffer(file);
 }
-
-$("pickBtn").onclick = () => $("fileInput").click();
-$("fileInput").onchange = e => loadFile(e.target.files[0]);
-const dz = $("dropzone");
+$("openEditBtn").onclick = async () => {
+  if(!canDirectSave){
+    toast("Édition directe non disponible sur ce navigateur — le fichier sera téléchargé après modification");
+    fileHandle=null; $("fileInput").click(); return;
+  }
+  try{
+    const [h] = await window.showOpenFilePicker({types:[{description:"Fichier Excel",accept:{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":[".xlsx"]}}]});
+    fileHandle = h;
+    loadBlobFile(await h.getFile());
+  }catch(e){ /* annulé */ }
+};
+$("pickBtn").onclick = () => { fileHandle=null; $("fileInput").click(); };
+$("fileInput").onchange = e => loadBlobFile(e.target.files[0]);
+const dz=$("dropzone");
 ["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("over");}));
 ["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("over");}));
-dz.addEventListener("drop", e => loadFile(e.dataTransfer.files[0]));
+dz.addEventListener("drop",e=>{ fileHandle=null; loadBlobFile(e.dataTransfer.files[0]); });
 
-/* ---------- Helpers d'état ---------- */
-const isStaffe = p => norm(p.statut).includes("staffe");
-const isAttente = p => norm(p.statut).includes("attente");
-const isUrgent = p => norm(p.cat).includes("urgent");
-const isCatheOui = p => norm(p.cathe).startsWith("oui")||norm(p.cathe)==="o";
-const fmtDate = d => d ? d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}) : "—";
+/* ================= État modifié ================= */
+function setDirty(v){
+  dirty=v;
+  $("savebar").classList.toggle("visible",v);
+  $("saveBtn").style.display = fileHandle ? "" : "none";
+  $("saveHint").textContent = fileHandle
+    ? "Enregistrez pour écrire directement dans " + sourceFileName + "."
+    : "Téléchargez l'Excel mis à jour puis remplacez l'ancien fichier dans le dossier partagé.";
+}
+window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
+$("saveBtn").onclick = saveToFile;
+$("downloadBtn").onclick = downloadFile;
 
-/* ---------- Onglets ---------- */
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),3500);
+}
+
+/* ================= Helpers ================= */
+const isStaffe=p=>norm(p.statut).includes("staffe");
+const isAttente=p=>norm(p.statut).includes("attente");
+const isUrgent=p=>norm(p.cat).includes("urgent");
+const isCatheOui=p=>norm(p.cathe).startsWith("oui")||norm(p.cathe)==="o";
+const fmtDate=d=>d?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}):"—";
+const toInputDate=d=>d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:"";
+const fromInputDate=s=>{ if(!s) return null; const [y,m,dd]=s.split("-").map(Number); return new Date(y,m-1,dd); };
+
+/* ================= Onglets ================= */
 document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick = () => {
+  t.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    $(t.dataset.panel).classList.add("active");
+    t.classList.add("active"); $(t.dataset.panel).classList.add("active");
     if(t.dataset.panel==="panel-dash") renderDash();
   };
 });
 
-/* ---------- Liste : filtres dynamiques ---------- */
-function fillSelect(id, values, allLabel){
-  const sel = $(id), current = sel.value;
-  sel.innerHTML = `<option value="">${allLabel}</option>` + values.map(v=>`<option value="${v}">${v}</option>`).join("");
-  if(values.includes(current)) sel.value = current;
+/* ================= Liste ================= */
+function fillSelect(id,values,allLabel){
+  const sel=$(id),cur=sel.value;
+  sel.innerHTML=`<option value="">${allLabel}</option>`+values.map(v=>`<option value="${v}">${v}</option>`).join("");
+  if(values.includes(cur)) sel.value=cur;
 }
-
 function renderChips(){
-  const counts = {};
-  patients.forEach(p => { if(p.doc) counts[p.doc]=(counts[p.doc]||0)+1; });
-  const docs = Object.keys(counts).sort();
-  if(!docs.includes(activeDoc)) activeDoc = "";
-  const chips = [["","Tous les médecins",patients.length], ...docs.map(d=>[d,d,counts[d]])];
-  $("chips").innerHTML = chips.map(([val,label,c]) =>
-    `<button class="chip${activeDoc===val?" active":""}" data-doc="${val}" aria-pressed="${activeDoc===val}">${label}<span class="count">${c}</span></button>`
-  ).join("");
-  $("chips").querySelectorAll(".chip").forEach(b=>{
-    b.onclick = () => { activeDoc = b.dataset.doc; renderChips(); renderList(); };
-  });
+  const counts={};
+  patients.forEach(p=>{ if(p.doc) counts[p.doc]=(counts[p.doc]||0)+1; });
+  const docs=Object.keys(counts).sort();
+  if(!docs.includes(activeDoc)) activeDoc="";
+  const chips=[["","Tous les médecins",patients.length],...docs.map(d=>[d,d,counts[d]])];
+  $("chips").innerHTML=chips.map(([val,label,c])=>
+    `<button class="chip${activeDoc===val?" active":""}" data-doc="${val}">${label}<span class="count">${c}</span></button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>{ b.onclick=()=>{ activeDoc=b.dataset.doc; renderChips(); renderList(); }; });
 }
-
-const badge = (text, cls) => `<span class="badge ${cls}">${text}</span>`;
-
+const badge=(t,c)=>`<span class="badge ${c}">${t}</span>`;
 function renderList(){
-  const q = norm($("search").value);
-  const st = $("fStatut").value, cat = $("fCat").value, cathe = $("fCathe").value;
-
-  const rows = patients.filter(p=>{
-    if(activeDoc && p.doc !== activeDoc) return false;
-    if(st && p.statut !== st) return false;
-    if(cat && p.cat !== cat) return false;
-    if(cathe==="OUI" && !isCatheOui(p)) return false;
-    if(cathe==="NON" && isCatheOui(p)) return false;
-    if(q && !norm([p.nom,p.prenom,p.diag,p.doc,p.decision,p.transfert].join(" ")).includes(q)) return false;
+  const q=norm($("search").value), st=$("fStatut").value, cat=$("fCat").value;
+  const rows=patients.map((p,i)=>({p,i})).filter(({p})=>{
+    if(activeDoc&&p.doc!==activeDoc) return false;
+    if(st&&p.statut!==st) return false;
+    if(cat&&p.cat!==cat) return false;
+    if(q&&!norm([p.nom,p.prenom,p.diag,p.doc,p.decision,p.transfert].join(" ")).includes(q)) return false;
     return true;
   });
-
-  $("meta").innerHTML = `<strong>${rows.length}</strong> patient${rows.length>1?"s":""} affiché${rows.length>1?"s":""} sur ${patients.length}` + (activeDoc?` — filtre : <strong>${activeDoc}</strong>`:"");
-  $("empty").style.display = rows.length ? "none" : "block";
-  $("emptyq").textContent = $("search").value.trim() || "ces filtres";
-
-  $("tbody").innerHTML = rows.map(p=>`
+  $("meta").innerHTML=`<strong>${rows.length}</strong> patient${rows.length>1?"s":""} affiché${rows.length>1?"s":""} sur ${patients.length}`+(activeDoc?` — filtre : <strong>${activeDoc}</strong>`:"");
+  $("empty").style.display=rows.length?"none":"block";
+  $("emptyq").textContent=$("search").value.trim()||"ces filtres";
+  $("tbody").innerHTML=rows.map(({p,i})=>`
     <tr>
       <td class="mono">${String(p.num).padStart(2,"0")}</td>
       <td class="pname">${p.nom} ${p.prenom}</td>
@@ -433,29 +547,86 @@ function renderList(){
       <td>${isUrgent(p)?badge("URGENT","b-urgent"):badge(p.cat||"—","b-normal")}</td>
       <td class="mono">${fmtDate(p.staff)}</td>
       <td>${p.decision||"—"}</td>
-      <td>${p.transfert||"—"}</td>
       <td>${isCatheOui(p)?badge("Oui","b-oui"):badge("Non","b-normal")}</td>
+      <td><button class="editbtn" data-i="${i}">Modifier</button></td>
     </tr>`).join("");
+  $("tbody").querySelectorAll(".editbtn").forEach(b=>{ b.onclick=()=>openEditor(+b.dataset.i); });
 }
 
-/* ---------- Dashboard ---------- */
-const PALETTE = ["#0E7A73","#3A6EA5","#B07AA8","#8A6D1E","#D5453C","#5C7377"];
-Chart.defaults.font.family = "'Instrument Sans', system-ui, sans-serif";
-Chart.defaults.color = "#5C7377";
-
-function makeChart(id, cfg){
-  if(charts[id]) charts[id].destroy();
-  charts[id] = new Chart($(id), cfg);
+/* ================= Formulaire d'édition ================= */
+const dlg=$("editDialog");
+function fillDatalists(){
+  $("docList").innerHTML=[...new Set(patients.map(p=>p.doc).filter(Boolean))].sort().map(d=>`<option value="${d}">`).join("");
+  $("trList").innerHTML=[...new Set(patients.map(p=>p.transfert).filter(Boolean))].sort().map(d=>`<option value="${d}">`).join("");
 }
+function ensureOption(selId,val){
+  if(!val) return;
+  const sel=$(selId);
+  if(![...sel.options].some(o=>o.value===val)){ const o=document.createElement("option"); o.value=o.textContent=val; sel.appendChild(o); }
+  sel.value=val;
+}
+function openEditor(i){
+  editIndex=i;
+  const p=i>=0?patients[i]:{num:(Math.max(0,...patients.map(x=>+x.num||0))+1),nom:"",prenom:"",age:"",sexe:"",diag:"",echo:null,poids:null,taille:null,spo2:null,doc:activeDoc||"",statut:"En Attente de staff",staff:null,cat:"Normal",decision:"",transfert:"",complement:"",cathe:"Non"};
+  $("dlgTitle").textContent=i>=0?`Modifier — ${p.nom} ${p.prenom}`:"Ajouter un patient";
+  $("deleteBtn").style.display=i>=0?"":"none";
+  fillDatalists();
+  $("ef_nom").value=p.nom; $("ef_prenom").value=p.prenom; $("ef_age").value=p.age;
+  $("ef_sexe").value=p.sexe||""; $("ef_diag").value=p.diag;
+  $("ef_echo").value=toInputDate(p.echo); $("ef_spo2").value=p.spo2??"";
+  $("ef_poids").value=p.poids??""; $("ef_taille").value=p.taille??"";
+  $("ef_doc").value=p.doc; ensureOption("ef_statut",p.statut||"En Attente de staff");
+  $("ef_staff").value=toInputDate(p.staff); ensureOption("ef_cat",p.cat||"Normal");
+  $("ef_decision").value=p.decision; $("ef_transfert").value=p.transfert;
+  ensureOption("ef_cathe",p.cathe||"Non"); $("ef_complement").value=p.complement;
+  $("formError").style.display="none";
+  dlg.showModal();
+}
+$("addBtn").onclick=()=>openEditor(-1);
+$("dlgClose").onclick=$("cancelBtn").onclick=()=>dlg.close();
+$("deleteBtn").onclick=()=>{
+  const p=patients[editIndex];
+  if(confirm(`Supprimer définitivement le patient ${p.nom} ${p.prenom} de la liste ?`)){
+    patients.splice(editIndex,1); dlg.close(); setDirty(true); refreshAll();
+    toast("Patient supprimé — n'oubliez pas d'enregistrer");
+  }
+};
+$("okBtn").onclick=()=>{
+  const nom=clean($("ef_nom").value).toUpperCase(), prenom=clean($("ef_prenom").value).toUpperCase();
+  if(!nom||!prenom){ $("formError").style.display="block"; return; }
+  const spo2v=$("ef_spo2").value===""?null:Math.max(0,Math.min(100,Math.round(+$("ef_spo2").value)));
+  const rec={
+    num:editIndex>=0?patients[editIndex].num:(Math.max(0,...patients.map(x=>+x.num||0))+1),
+    nom, prenom,
+    age:clean($("ef_age").value), sexe:$("ef_sexe").value,
+    diag:clean($("ef_diag").value),
+    echo:fromInputDate($("ef_echo").value),
+    poids:$("ef_poids").value===""?null:+$("ef_poids").value,
+    taille:$("ef_taille").value===""?null:+$("ef_taille").value,
+    spo2:spo2v,
+    doc:clean($("ef_doc").value).toUpperCase(),
+    statut:$("ef_statut").value,
+    staff:fromInputDate($("ef_staff").value),
+    cat:$("ef_cat").value,
+    decision:clean($("ef_decision").value),
+    transfert:clean($("ef_transfert").value),
+    complement:clean($("ef_complement").value),
+    cathe:$("ef_cathe").value
+  };
+  if(editIndex>=0) patients[editIndex]=rec; else patients.push(rec);
+  dlg.close(); setDirty(true); refreshAll();
+  toast(editIndex>=0?"Modifications appliquées — pensez à enregistrer":"Patient ajouté — pensez à enregistrer");
+};
 
+/* ================= Dashboard ================= */
+Chart.defaults.font.family="'Instrument Sans', system-ui, sans-serif";
+Chart.defaults.color="#5C7377";
+function makeChart(id,cfg){ if(charts[id]) charts[id].destroy(); charts[id]=new Chart($(id),cfg); }
 function renderKpis(){
-  const total = patients.length;
-  const attente = patients.filter(isAttente).length;
-  const staffes = patients.filter(isStaffe).length;
-  const urgents = patients.filter(isUrgent).length;
-  const catheOui = patients.filter(isCatheOui).length;
-  const spo2Low = patients.filter(p=>p.spo2!=null && p.spo2<90).length;
-  $("kpis").innerHTML = `
+  const total=patients.length, attente=patients.filter(isAttente).length, staffes=patients.filter(isStaffe).length;
+  const urgents=patients.filter(isUrgent).length, catheOui=patients.filter(isCatheOui).length;
+  const spo2Low=patients.filter(p=>p.spo2!=null&&p.spo2<90).length;
+  $("kpis").innerHTML=`
     <div class="kpi"><div class="label">Patients au total</div><div class="value">${total}</div></div>
     <div class="kpi k-wait"><div class="label">En attente de staff</div><div class="value">${attente}</div><div class="sub">${total?Math.round(attente/total*100):0} % de la liste</div></div>
     <div class="kpi k-ok"><div class="label">Dossiers staffés</div><div class="value">${staffes}</div></div>
@@ -463,87 +634,57 @@ function renderKpis(){
     <div class="kpi k-primary"><div class="label">Cathétérismes</div><div class="value">${catheOui}</div></div>
     <div class="kpi k-urgent"><div class="label">SpO₂ &lt; 90 %</div><div class="value">${spo2Low}</div></div>`;
 }
-
 function renderDash(){
   renderKpis();
-
-  // Patients par médecin, empilé par statut
-  const docs = [...new Set(patients.map(p=>p.doc).filter(Boolean))].sort();
-  makeChart("chDoc",{
-    type:"bar",
+  const docs=[...new Set(patients.map(p=>p.doc).filter(Boolean))].sort();
+  makeChart("chDoc",{type:"bar",
     data:{labels:docs,datasets:[
       {label:"Staffés",data:docs.map(d=>patients.filter(p=>p.doc===d&&isStaffe(p)).length),backgroundColor:"#0E7A73",borderRadius:6},
-      {label:"En attente",data:docs.map(d=>patients.filter(p=>p.doc===d&&isAttente(p)).length),backgroundColor:"#E0B84C",borderRadius:6}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
-      plugins:{legend:{position:"bottom"}}}
-  });
-
-  // Statut donut
-  const st = patients.filter(isStaffe).length, at = patients.filter(isAttente).length;
-  const autres = patients.length - st - at;
-  makeChart("chStatut",{
-    type:"doughnut",
+      {label:"En attente",data:docs.map(d=>patients.filter(p=>p.doc===d&&isAttente(p)).length),backgroundColor:"#E0B84C",borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},plugins:{legend:{position:"bottom"}}}});
+  const st=patients.filter(isStaffe).length, at=patients.filter(isAttente).length, autres=patients.length-st-at;
+  makeChart("chStatut",{type:"doughnut",
     data:{labels:["Staffés","En attente de staff",...(autres?["Autre / non renseigné"]:[])],
       datasets:[{data:[st,at,...(autres?[autres]:[])],backgroundColor:["#0E7A73","#E0B84C","#C6D2D2"],borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom"}}}
-  });
-
-  // SpO2 par tranche
-  const tranches = [["< 85 %",p=>p.spo2<85],["85–89 %",p=>p.spo2>=85&&p.spo2<90],["90–94 %",p=>p.spo2>=90&&p.spo2<95],["≥ 95 %",p=>p.spo2>=95]];
-  const withSpo2 = patients.filter(p=>p.spo2!=null);
-  makeChart("chSpo2",{
-    type:"bar",
-    data:{labels:tranches.map(t=>t[0]),datasets:[{data:tranches.map(([_,f])=>withSpo2.filter(f).length),
-      backgroundColor:["#D5453C","#E0844C","#E0B84C","#0E7A73"],borderRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{x:{grid:{display:false}},y:{ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
-      plugins:{legend:{display:false}}}
-  });
-
-  // Catégorie + cathétérisme (barres groupées)
-  makeChart("chCat",{
-    type:"bar",
-    data:{labels:["Catégorie","Cathétérisme"],datasets:[
-      {label:"Urgent / Oui",data:[patients.filter(isUrgent).length,patients.filter(isCatheOui).length],backgroundColor:"#D5453C",borderRadius:6},
-      {label:"Normal / Non",data:[patients.filter(p=>!isUrgent(p)).length,patients.filter(p=>!isCatheOui(p)).length],backgroundColor:"#0E7A73",borderRadius:6}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{x:{grid:{display:false}},y:{ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
-      plugins:{legend:{position:"bottom"}}}
-  });
-
-  // Alertes
-  const alerts = patients.filter(p=>(p.spo2!=null&&p.spo2<90)||(isUrgent(p)&&isAttente(p)));
-  $("alerts").innerHTML = alerts.length ? alerts.map(p=>`
-    <li>
-      <span class="who">${p.nom} ${p.prenom}</span>
-      <span>${p.doc||""}</span>
-      <span class="why">${[p.spo2!=null&&p.spo2<90?`SpO₂ à ${p.spo2} %`:null, isUrgent(p)&&isAttente(p)?"urgent, en attente de staff":null].filter(Boolean).join(" · ")}</span>
-    </li>`).join("") : `<li class="noalert">Aucune alerte selon les critères actuels.</li>`;
-
-  // Staffs à venir
-  const today = new Date(); today.setHours(0,0,0,0);
-  const upcoming = patients.filter(p=>p.staff && p.staff>=today).sort((a,b)=>a.staff-b.staff);
-  $("upcoming").innerHTML = upcoming.length ? upcoming.map(p=>`
-    <li>
-      <span class="who">${p.nom} ${p.prenom}</span>
-      <span class="mono">${fmtDate(p.staff)}</span>
-      <span class="why">${p.doc||""} · ${isUrgent(p)?"URGENT":"Normal"}</span>
-    </li>`).join("") : `<li class="noalert">Aucun staff programmé à une date future.</li>`;
+    options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom"}}}});
+  const tranches=[["< 85 %",p=>p.spo2<85],["85–89 %",p=>p.spo2>=85&&p.spo2<90],["90–94 %",p=>p.spo2>=90&&p.spo2<95],["≥ 95 %",p=>p.spo2>=95]];
+  const withSpo2=patients.filter(p=>p.spo2!=null);
+  makeChart("chSpo2",{type:"bar",
+    data:{labels:tranches.map(t=>t[0]),datasets:[{data:tranches.map(([_,f])=>withSpo2.filter(f).length),backgroundColor:["#D5453C","#E0844C","#E0B84C","#0E7A73"],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},plugins:{legend:{display:false}}}});
+  // Croisement urgents / cathétérisme (plus lisible que l'ancien graphique)
+  const uAvec=patients.filter(p=>isUrgent(p)&&isCatheOui(p)).length;
+  const uSans=patients.filter(p=>isUrgent(p)&&!isCatheOui(p)).length;
+  const nAvec=patients.filter(p=>!isUrgent(p)&&isCatheOui(p)).length;
+  const nSans=patients.filter(p=>!isUrgent(p)&&!isCatheOui(p)).length;
+  makeChart("chCat",{type:"bar",
+    data:{labels:["Urgents","Normaux"],datasets:[
+      {label:"Avec cathétérisme",data:[uAvec,nAvec],backgroundColor:"#0E7A73",borderRadius:6},
+      {label:"Sans cathétérisme",data:[uSans,nSans],backgroundColor:"#C6D2D2",borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},plugins:{legend:{position:"bottom"}}}});
+  const alerts=patients.filter(p=>(p.spo2!=null&&p.spo2<90)||(isUrgent(p)&&isAttente(p)));
+  $("alerts").innerHTML=alerts.length?alerts.map(p=>`
+    <li><span class="who">${p.nom} ${p.prenom}</span><span>${p.doc||""}</span>
+    <span class="why">${[p.spo2!=null&&p.spo2<90?`SpO₂ à ${p.spo2} %`:null,isUrgent(p)&&isAttente(p)?"urgent, en attente de staff":null].filter(Boolean).join(" · ")}</span></li>`).join("")
+    :`<li class="noalert">Aucune alerte selon les critères actuels.</li>`;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const upcoming=patients.filter(p=>p.staff&&p.staff>=today).sort((a,b)=>a.staff-b.staff);
+  $("upcoming").innerHTML=upcoming.length?upcoming.map(p=>`
+    <li><span class="who">${p.nom} ${p.prenom}</span><span class="mono">${fmtDate(p.staff)}</span>
+    <span class="why">${p.doc||""} · ${isUrgent(p)?"URGENT":"Normal"}</span></li>`).join("")
+    :`<li class="noalert">Aucun staff programmé à une date future.</li>`;
 }
 
-/* ---------- Init ---------- */
+/* ================= Init ================= */
 function refreshAll(){
   fillSelect("fStatut",[...new Set(patients.map(p=>p.statut).filter(Boolean))].sort(),"Tous les statuts");
   fillSelect("fCat",[...new Set(patients.map(p=>p.cat).filter(Boolean))].sort(),"Toutes catégories");
-  renderChips();
-  renderList();
+  renderChips(); renderList();
   if($("panel-dash").classList.contains("active")) renderDash();
 }
-$("search").addEventListener("input", renderList);
-["fStatut","fCat","fCathe"].forEach(id=>$(id).addEventListener("change", renderList));
+$("search").addEventListener("input",renderList);
+["fStatut","fCat"].forEach(id=>$(id).addEventListener("change",renderList));
+if(!canDirectSave){ $("openEditBtn").textContent="Charger pour modifier"; }
 refreshAll();
 </script>
 </body>
