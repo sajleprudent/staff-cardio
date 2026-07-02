@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Patients — Cardiologie</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#F5F8F8; --surface:#FFFFFF; --ink:#152A2E; --muted:#5C7377;
+    --primary:#0E7A73; --primary-soft:#E3F1EF; --urgent:#D5453C; --urgent-soft:#FCEBEA;
+    --border:#DFE8E8; --ok:#2E7D32; --ok-soft:#E8F3E9; --wait:#8A6D1E; --wait-soft:#FBF3DC;
+    --accent2:#3A6EA5; --accent3:#B07AA8;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,-apple-system,sans-serif;padding:28px 20px 60px}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  header{margin-bottom:18px}
+  .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);font-weight:600}
+  h1{font-size:1.65rem;font-weight:700;letter-spacing:-.01em;margin-top:4px}
+  .ecg{display:block;margin-top:10px;width:100%;max-width:420px}
+  .ecg path{stroke:var(--primary);stroke-width:2;fill:none;opacity:.55}
+
+  /* Zone de chargement du fichier */
+  .dropzone{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:var(--surface);border:1.5px dashed var(--primary);border-radius:14px;padding:16px 18px;margin-bottom:18px;transition:background .15s}
+  .dropzone.over{background:var(--primary-soft)}
+  .dz-icon{width:36px;height:36px;flex:none;stroke:var(--primary)}
+  .dz-text{flex:1 1 240px;min-width:0}
+  .dz-text strong{display:block;font-size:.95rem}
+  .dz-text span{font-size:.8rem;color:var(--muted)}
+  .btn{padding:10px 18px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer}
+  .btn:hover{filter:brightness(1.08)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .filestatus{font-size:.8rem;color:var(--muted);width:100%}
+  .filestatus.loaded{color:var(--ok);font-weight:600}
+  .filestatus.error{color:var(--urgent);font-weight:600}
+  .demo-banner{background:var(--wait-soft);color:var(--wait);border-radius:10px;padding:10px 14px;font-size:.83rem;margin-bottom:16px}
+
+  /* Onglets */
+  .tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .tab{padding:10px 18px;border:none;background:none;font:inherit;font-size:.92rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1px}
+  .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+  .tab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* Liste */
+  .toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
+  .searchbox{flex:1 1 280px;position:relative}
+  .searchbox svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted)}
+  .searchbox input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.95rem;background:var(--surface);color:var(--ink)}
+  .searchbox input:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:var(--primary)}
+  select{padding:12px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;font-size:.9rem;background:var(--surface);color:var(--ink);cursor:pointer}
+  select:focus{outline:2px solid var(--primary);outline-offset:-1px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font:inherit;font-size:.88rem;font-weight:500;color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+  .chip:hover{border-color:var(--primary)}
+  .chip .count{font-family:'Spline Sans Mono',monospace;font-size:.75rem;background:var(--bg);border-radius:999px;padding:2px 8px;color:var(--muted)}
+  .chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+  .chip.active .count{background:rgba(255,255,255,.2);color:#fff}
+  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  .meta{font-size:.85rem;color:var(--muted);margin-bottom:10px}
+  .meta strong{color:var(--ink)}
+
+  .tablecard{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:auto}
+  table{width:100%;border-collapse:collapse;min-width:1000px}
+  th{position:sticky;top:0;background:var(--surface);text-align:left;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
+  td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:.9rem;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--primary-soft)}
+  .pname{font-weight:600;white-space:nowrap}
+  .diag{max-width:260px;color:var(--muted);font-size:.85rem;line-height:1.35}
+  .mono{font-family:'Spline Sans Mono',monospace;font-size:.82rem;white-space:nowrap}
+  .doc{white-space:nowrap;font-weight:500}
+
+  .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.74rem;font-weight:600;white-space:nowrap}
+  .b-urgent{background:var(--urgent-soft);color:var(--urgent)}
+  .b-normal{background:var(--bg);color:var(--muted)}
+  .b-staffe{background:var(--ok-soft);color:var(--ok)}
+  .b-attente{background:var(--wait-soft);color:var(--wait)}
+  .b-oui{background:var(--primary-soft);color:var(--primary)}
+
+  .empty{padding:48px 20px;text-align:center;color:var(--muted);font-size:.95rem}
+  .empty strong{color:var(--ink)}
+
+  /* Dashboard */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+  .kpi .label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .kpi .value{font-family:'Spline Sans Mono',monospace;font-size:1.9rem;font-weight:600;margin-top:6px}
+  .kpi.k-urgent .value{color:var(--urgent)}
+  .kpi.k-wait .value{color:var(--wait)}
+  .kpi.k-ok .value{color:var(--ok)}
+  .kpi.k-primary .value{color:var(--primary)}
+  .kpi .sub{font-size:.75rem;color:var(--muted);margin-top:2px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .card h3{font-size:.95rem;font-weight:600;margin-bottom:12px}
+  .card h3 small{display:block;font-weight:400;font-size:.75rem;color:var(--muted);margin-top:2px}
+  .chartbox{position:relative;height:260px}
+
+  .alertlist{list-style:none}
+  .alertlist li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.88rem;flex-wrap:wrap}
+  .alertlist li:last-child{border-bottom:none}
+  .alertlist .who{font-weight:600}
+  .alertlist .why{color:var(--muted);font-size:.8rem;flex:1 1 100%}
+  .noalert{color:var(--muted);font-size:.88rem;padding:8px 0}
+
+  footer{margin-top:20px;font-size:.78rem;color:var(--muted);line-height:1.5}
+
+  @media (max-width:760px){
+    .grid2{grid-template-columns:1fr}
+    body{padding:18px 12px 40px}
+    h1{font-size:1.3rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Staff · Service de cardiologie</div>
+    <h1>Suivi des patients & tableau de bord</h1>
+    <svg class="ecg" viewBox="0 0 420 30" aria-hidden="true">
+      <path d="M0 20 H60 L70 20 78 8 86 26 94 15 100 20 H180 L190 20 198 5 206 28 214 14 220 20 H300 L310 20 318 9 326 25 334 16 340 20 H420"/>
+    </svg>
+  </header>
+
+  <div class="dropzone" id="dropzone">
+    <svg class="dz-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5"/>
+    </svg>
+    <div class="dz-text">
+      <strong>Charger le fichier Excel du staff</strong>
+      <span>Glissez-déposez le fichier .xlsx ici, ou cliquez sur le bouton. La lecture se fait sur votre poste, rien n'est envoyé sur internet.</span>
+    </div>
+    <button class="btn" id="pickBtn">Choisir le fichier</button>
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm" hidden>
+    <div class="filestatus" id="filestatus"></div>
+  </div>
+
+  <div class="demo-banner" id="demoBanner">Données de démonstration affichées — chargez le fichier Excel réel pour voir les données à jour.</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-panel="panel-liste" role="tab">Liste des patients</button>
+    <button class="tab" data-panel="panel-dash" role="tab">Tableau de bord</button>
+  </div>
+
+  <!-- ONGLET LISTE -->
+  <section class="panel active" id="panel-liste">
+    <div class="toolbar">
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="Rechercher un patient, un diagnostic…" aria-label="Rechercher un patient">
+      </div>
+      <select id="fStatut" aria-label="Filtrer par statut"><option value="">Tous les statuts</option></select>
+      <select id="fCat" aria-label="Filtrer par catégorie"><option value="">Toutes catégories</option></select>
+      <select id="fCathe" aria-label="Filtrer par cathétérisme">
+        <option value="">Cathétérisme : tous</option><option value="OUI">Cathétérisme : oui</option><option value="NON">Cathétérisme : non</option>
+      </select>
+    </div>
+
+    <div class="chips" id="chips" role="group" aria-label="Filtrer par médecin responsable"></div>
+    <div class="meta" id="meta"></div>
+
+    <div class="tablecard">
+      <table>
+        <thead>
+          <tr>
+            <th>N°</th><th>Patient</th><th>Âge / Sexe</th><th>Diagnostic</th>
+            <th>Écho</th><th>Poids / Taille</th><th>SpO₂</th>
+            <th>Médecin</th><th>Statut</th><th>Catégorie</th>
+            <th>Staff</th><th>Décision</th><th>Transfert</th><th>Cathé.</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="empty" style="display:none">
+        Aucun patient ne correspond à <strong id="emptyq"></strong>.<br>Modifiez la recherche ou les filtres.
+      </div>
+    </div>
+  </section>
+
+  <!-- ONGLET DASHBOARD -->
+  <section class="panel" id="panel-dash">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Patients par médecin <small>répartition selon le statut de staff</small></h3>
+        <div class="chartbox"><canvas id="chDoc"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Statut des dossiers <small>staffés vs en attente de staff</small></h3>
+        <div class="chartbox"><canvas id="chStatut"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Répartition SpO₂ <small>saturation en oxygène par tranche</small></h3>
+        <div class="chartbox"><canvas id="chSpo2"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Catégorie & cathétérisme <small>proportion de cas urgents et de cathétérismes réalisés</small></h3>
+        <div class="chartbox"><canvas id="chCat"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>⚠ Patients à surveiller <small>SpO₂ inférieure à 90 % ou dossier urgent en attente de staff</small></h3>
+        <ul class="alertlist" id="alerts"></ul>
+      </div>
+      <div class="card">
+        <h3>Prochains staffs programmés <small>d'après la colonne « Date de staff »</small></h3>
+        <ul class="alertlist" id="upcoming"></ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Prototype sans serveur : les données sont lues directement depuis le fichier Excel, sur le poste de l'utilisateur.
+    Pour un partage multi-médecins, il suffit de garder le fichier Excel sur un dossier partagé (OneDrive, Google Drive, réseau)
+    et de recharger le fichier dans cette page pour voir la dernière version.
+  </footer>
+</div>
+
+<script>
+/* ---------- Données de démonstration (remplacées au chargement du fichier) ---------- */
+const DEMO = [
+  {num:1, nom:"BALLA", prenom:"AMADOU", age:"08 ans", sexe:"M", diag:"CIA", echo:new Date(2024,4,6), poids:22, taille:130, spo2:98, doc:"DR SEYE", statut:"En Attente de staff", staff:null, cat:"Normal", decision:"", transfert:"Autres", complement:"", cathe:"Non"},
+  {num:2, nom:"DIALLO", prenom:"FATOU", age:"17 ans", sexe:"F", diag:"Bon résultat de RVM + PT", echo:new Date(2024,4,7), poids:47, taille:150, spo2:100, doc:"DR JEFF", statut:"Staffé", staff:new Date(2026,1,6), cat:"URGENT", decision:"XXX", transfert:"MECENAT", complement:"", cathe:"Oui"},
+  {num:3, nom:"DIAKHATE", prenom:"BINTA", age:"03 ans", sexe:"F", diag:"Atrésie tricuspide avec gros vaisseaux monoposés", echo:new Date(2024,4,8), poids:13, taille:90, spo2:79, doc:"DR KAYA", statut:"Staffé", staff:new Date(2026,9,5), cat:"Normal", decision:"yyy", transfert:"Autres", complement:"", cathe:"Oui"},
+  {num:4, nom:"THIAW", prenom:"RITA", age:"16 ans", sexe:"F", diag:"Sténose valvulaire pulmonaire serrée", echo:new Date(2024,4,9), poids:33, taille:155, spo2:90, doc:"DR KAYA", statut:"En Attente de staff", staff:null, cat:"URGENT", decision:"", transfert:"Autres", complement:"", cathe:"Non"},
+  {num:5, nom:"NDONG", prenom:"DIEUDONNÉ", age:"7 mois", sexe:"M", diag:"HTAP avec PAPs à 88 mm", echo:new Date(2024,4,10), poids:5.14, taille:60, spo2:97, doc:"DR SEYE", statut:"En Attente de staff", staff:null, cat:"Normal", decision:"", transfert:"Autres", complement:"", cathe:"Non"}
+];
+
+let patients = DEMO.slice();
+let activeDoc = "";
+const charts = {};
+const $ = id => document.getElementById(id);
+const norm = s => (s==null?"":String(s)).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+const clean = s => (s==null?"":String(s)).trim();
+
+/* ---------- Lecture du fichier Excel ---------- */
+/* Les en-têtes sont reconnus par mots-clés : le prototype tolère les espaces,
+   accents et variations de casse ("NOM ", "SPO 2", "DATE DE STAFF", etc.). */
+function headerKey(h){
+  const n = norm(h);
+  if(n.startsWith("n°")||n==="n"||n==="no"||n==="num") return "num";
+  if(n.startsWith("nom")) return "nom";
+  if(n.startsWith("prenom")) return "prenom";
+  if(n.startsWith("age")) return "age";
+  if(n.startsWith("sexe")) return "sexe";
+  if(n.includes("diagnostic")) return "diag";
+  if(n.includes("echo")) return "echo";
+  if(n.startsWith("poids")) return "poids";
+  if(n.startsWith("taille")) return "taille";
+  if(n.includes("spo")) return "spo2";
+  if(n.includes("operateur")||n.includes("medecin")) return "doc";
+  if(n.includes("statut")) return "statut";
+  if(n.includes("date") && n.includes("staff")) return "staff";
+  if(n.includes("categorie")) return "cat";
+  if(n.includes("decision")) return "decision";
+  if(n.includes("transfert")) return "transfert";
+  if(n.includes("complement")) return "complement";
+  if(n.includes("cathet")) return "cathe";
+  return null;
+}
+
+function asDate(v){
+  if(v==null||v==="") return null;
+  if(v instanceof Date && !isNaN(v)) return v;
+  if(typeof v === "number"){ // numéro de série Excel
+    const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+    return isNaN(d) ? null : d;
+  }
+  const d = new Date(v);
+  return isNaN(d) ? null : d;
+}
+
+function asSpo2(v){
+  if(v==null||v==="") return null;
+  const n = parseFloat(String(v).replace(",","."));
+  if(isNaN(n)) return null;
+  return n <= 1.5 ? Math.round(n*100) : Math.round(n); // 0.98 → 98 ; 98 → 98
+}
+
+function parseWorkbook(wb){
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:"", cellDates:true, raw:true});
+  if(!rows.length) throw new Error("Feuille vide");
+  const headers = rows[0].map(headerKey);
+  const out = [];
+  for(let i=1;i<rows.length;i++){
+    const r = rows[i], o = {};
+    headers.forEach((k,j)=>{ if(k) o[k] = r[j]; });
+    if(!clean(o.nom) && !clean(o.prenom)) continue; // ignorer les lignes vides
+    out.push({
+      num: o.num || out.length+1,
+      nom: clean(o.nom).toUpperCase(),
+      prenom: clean(o.prenom).toUpperCase(),
+      age: clean(o.age),
+      sexe: clean(o.sexe).toUpperCase(),
+      diag: clean(o.diag),
+      echo: asDate(o.echo),
+      poids: o.poids===""?null:parseFloat(String(o.poids).replace(",",".")),
+      taille: o.taille===""?null:parseFloat(String(o.taille).replace(",",".")),
+      spo2: asSpo2(o.spo2),
+      doc: clean(o.doc).toUpperCase(),
+      statut: clean(o.statut),
+      staff: asDate(o.staff),
+      cat: clean(o.cat),
+      decision: clean(o.decision),
+      transfert: clean(o.transfert),
+      complement: clean(o.complement),
+      cathe: clean(o.cathe)
+    });
+  }
+  return out;
+}
+
+function loadFile(file){
+  const status = $("filestatus");
+  if(!file){ return; }
+  if(!/\.(xlsx|xls|xlsm)$/i.test(file.name)){
+    status.textContent = "Format non reconnu — choisissez un fichier .xlsx"; status.className = "filestatus error"; return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:"array", cellDates:true});
+      const data = parseWorkbook(wb);
+      if(!data.length) throw new Error("Aucun patient trouvé dans le fichier");
+      patients = data;
+      activeDoc = "";
+      status.textContent = `✓ ${file.name} — ${data.length} patient(s) chargé(s)`;
+      status.className = "filestatus loaded";
+      $("demoBanner").style.display = "none";
+      refreshAll();
+    }catch(err){
+      status.textContent = "Erreur de lecture : " + err.message;
+      status.className = "filestatus error";
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+$("pickBtn").onclick = () => $("fileInput").click();
+$("fileInput").onchange = e => loadFile(e.target.files[0]);
+const dz = $("dropzone");
+["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("over");}));
+["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("over");}));
+dz.addEventListener("drop", e => loadFile(e.dataTransfer.files[0]));
+
+/* ---------- Helpers d'état ---------- */
+const isStaffe = p => norm(p.statut).includes("staffe");
+const isAttente = p => norm(p.statut).includes("attente");
+const isUrgent = p => norm(p.cat).includes("urgent");
+const isCatheOui = p => norm(p.cathe).startsWith("oui")||norm(p.cathe)==="o";
+const fmtDate = d => d ? d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"}) : "—";
+
+/* ---------- Onglets ---------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    $(t.dataset.panel).classList.add("active");
+    if(t.dataset.panel==="panel-dash") renderDash();
+  };
+});
+
+/* ---------- Liste : filtres dynamiques ---------- */
+function fillSelect(id, values, allLabel){
+  const sel = $(id), current = sel.value;
+  sel.innerHTML = `<option value="">${allLabel}</option>` + values.map(v=>`<option value="${v}">${v}</option>`).join("");
+  if(values.includes(current)) sel.value = current;
+}
+
+function renderChips(){
+  const counts = {};
+  patients.forEach(p => { if(p.doc) counts[p.doc]=(counts[p.doc]||0)+1; });
+  const docs = Object.keys(counts).sort();
+  if(!docs.includes(activeDoc)) activeDoc = "";
+  const chips = [["","Tous les médecins",patients.length], ...docs.map(d=>[d,d,counts[d]])];
+  $("chips").innerHTML = chips.map(([val,label,c]) =>
+    `<button class="chip${activeDoc===val?" active":""}" data-doc="${val}" aria-pressed="${activeDoc===val}">${label}<span class="count">${c}</span></button>`
+  ).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>{
+    b.onclick = () => { activeDoc = b.dataset.doc; renderChips(); renderList(); };
+  });
+}
+
+const badge = (text, cls) => `<span class="badge ${cls}">${text}</span>`;
+
+function renderList(){
+  const q = norm($("search").value);
+  const st = $("fStatut").value, cat = $("fCat").value, cathe = $("fCathe").value;
+
+  const rows = patients.filter(p=>{
+    if(activeDoc && p.doc !== activeDoc) return false;
+    if(st && p.statut !== st) return false;
+    if(cat && p.cat !== cat) return false;
+    if(cathe==="OUI" && !isCatheOui(p)) return false;
+    if(cathe==="NON" && isCatheOui(p)) return false;
+    if(q && !norm([p.nom,p.prenom,p.diag,p.doc,p.decision,p.transfert].join(" ")).includes(q)) return false;
+    return true;
+  });
+
+  $("meta").innerHTML = `<strong>${rows.length}</strong> patient${rows.length>1?"s":""} affiché${rows.length>1?"s":""} sur ${patients.length}` + (activeDoc?` — filtre : <strong>${activeDoc}</strong>`:"");
+  $("empty").style.display = rows.length ? "none" : "block";
+  $("emptyq").textContent = $("search").value.trim() || "ces filtres";
+
+  $("tbody").innerHTML = rows.map(p=>`
+    <tr>
+      <td class="mono">${String(p.num).padStart(2,"0")}</td>
+      <td class="pname">${p.nom} ${p.prenom}</td>
+      <td class="mono">${p.age||"—"} · ${p.sexe||"—"}</td>
+      <td class="diag">${p.diag||"—"}</td>
+      <td class="mono">${fmtDate(p.echo)}</td>
+      <td class="mono">${p.poids??"—"} kg / ${p.taille??"—"} cm</td>
+      <td class="mono" style="color:${p.spo2!=null&&p.spo2<90?'var(--urgent)':'inherit'}">${p.spo2!=null?p.spo2+" %":"—"}</td>
+      <td class="doc">${p.doc||"—"}</td>
+      <td>${isStaffe(p)?badge("Staffé","b-staffe"):isAttente(p)?badge("En attente","b-attente"):(p.statut||"—")}</td>
+      <td>${isUrgent(p)?badge("URGENT","b-urgent"):badge(p.cat||"—","b-normal")}</td>
+      <td class="mono">${fmtDate(p.staff)}</td>
+      <td>${p.decision||"—"}</td>
+      <td>${p.transfert||"—"}</td>
+      <td>${isCatheOui(p)?badge("Oui","b-oui"):badge("Non","b-normal")}</td>
+    </tr>`).join("");
+}
+
+/* ---------- Dashboard ---------- */
+const PALETTE = ["#0E7A73","#3A6EA5","#B07AA8","#8A6D1E","#D5453C","#5C7377"];
+Chart.defaults.font.family = "'Instrument Sans', system-ui, sans-serif";
+Chart.defaults.color = "#5C7377";
+
+function makeChart(id, cfg){
+  if(charts[id]) charts[id].destroy();
+  charts[id] = new Chart($(id), cfg);
+}
+
+function renderKpis(){
+  const total = patients.length;
+  const attente = patients.filter(isAttente).length;
+  const staffes = patients.filter(isStaffe).length;
+  const urgents = patients.filter(isUrgent).length;
+  const catheOui = patients.filter(isCatheOui).length;
+  const spo2Low = patients.filter(p=>p.spo2!=null && p.spo2<90).length;
+  $("kpis").innerHTML = `
+    <div class="kpi"><div class="label">Patients au total</div><div class="value">${total}</div></div>
+    <div class="kpi k-wait"><div class="label">En attente de staff</div><div class="value">${attente}</div><div class="sub">${total?Math.round(attente/total*100):0} % de la liste</div></div>
+    <div class="kpi k-ok"><div class="label">Dossiers staffés</div><div class="value">${staffes}</div></div>
+    <div class="kpi k-urgent"><div class="label">Cas urgents</div><div class="value">${urgents}</div></div>
+    <div class="kpi k-primary"><div class="label">Cathétérismes</div><div class="value">${catheOui}</div></div>
+    <div class="kpi k-urgent"><div class="label">SpO₂ &lt; 90 %</div><div class="value">${spo2Low}</div></div>`;
+}
+
+function renderDash(){
+  renderKpis();
+
+  // Patients par médecin, empilé par statut
+  const docs = [...new Set(patients.map(p=>p.doc).filter(Boolean))].sort();
+  makeChart("chDoc",{
+    type:"bar",
+    data:{labels:docs,datasets:[
+      {label:"Staffés",data:docs.map(d=>patients.filter(p=>p.doc===d&&isStaffe(p)).length),backgroundColor:"#0E7A73",borderRadius:6},
+      {label:"En attente",data:docs.map(d=>patients.filter(p=>p.doc===d&&isAttente(p)).length),backgroundColor:"#E0B84C",borderRadius:6}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
+      plugins:{legend:{position:"bottom"}}}
+  });
+
+  // Statut donut
+  const st = patients.filter(isStaffe).length, at = patients.filter(isAttente).length;
+  const autres = patients.length - st - at;
+  makeChart("chStatut",{
+    type:"doughnut",
+    data:{labels:["Staffés","En attente de staff",...(autres?["Autre / non renseigné"]:[])],
+      datasets:[{data:[st,at,...(autres?[autres]:[])],backgroundColor:["#0E7A73","#E0B84C","#C6D2D2"],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom"}}}
+  });
+
+  // SpO2 par tranche
+  const tranches = [["< 85 %",p=>p.spo2<85],["85–89 %",p=>p.spo2>=85&&p.spo2<90],["90–94 %",p=>p.spo2>=90&&p.spo2<95],["≥ 95 %",p=>p.spo2>=95]];
+  const withSpo2 = patients.filter(p=>p.spo2!=null);
+  makeChart("chSpo2",{
+    type:"bar",
+    data:{labels:tranches.map(t=>t[0]),datasets:[{data:tranches.map(([_,f])=>withSpo2.filter(f).length),
+      backgroundColor:["#D5453C","#E0844C","#E0B84C","#0E7A73"],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{x:{grid:{display:false}},y:{ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
+      plugins:{legend:{display:false}}}
+  });
+
+  // Catégorie + cathétérisme (barres groupées)
+  makeChart("chCat",{
+    type:"bar",
+    data:{labels:["Catégorie","Cathétérisme"],datasets:[
+      {label:"Urgent / Oui",data:[patients.filter(isUrgent).length,patients.filter(isCatheOui).length],backgroundColor:"#D5453C",borderRadius:6},
+      {label:"Normal / Non",data:[patients.filter(p=>!isUrgent(p)).length,patients.filter(p=>!isCatheOui(p)).length],backgroundColor:"#0E7A73",borderRadius:6}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{x:{grid:{display:false}},y:{ticks:{stepSize:1},grid:{color:"#EDF2F2"}}},
+      plugins:{legend:{position:"bottom"}}}
+  });
+
+  // Alertes
+  const alerts = patients.filter(p=>(p.spo2!=null&&p.spo2<90)||(isUrgent(p)&&isAttente(p)));
+  $("alerts").innerHTML = alerts.length ? alerts.map(p=>`
+    <li>
+      <span class="who">${p.nom} ${p.prenom}</span>
+      <span>${p.doc||""}</span>
+      <span class="why">${[p.spo2!=null&&p.spo2<90?`SpO₂ à ${p.spo2} %`:null, isUrgent(p)&&isAttente(p)?"urgent, en attente de staff":null].filter(Boolean).join(" · ")}</span>
+    </li>`).join("") : `<li class="noalert">Aucune alerte selon les critères actuels.</li>`;
+
+  // Staffs à venir
+  const today = new Date(); today.setHours(0,0,0,0);
+  const upcoming = patients.filter(p=>p.staff && p.staff>=today).sort((a,b)=>a.staff-b.staff);
+  $("upcoming").innerHTML = upcoming.length ? upcoming.map(p=>`
+    <li>
+      <span class="who">${p.nom} ${p.prenom}</span>
+      <span class="mono">${fmtDate(p.staff)}</span>
+      <span class="why">${p.doc||""} · ${isUrgent(p)?"URGENT":"Normal"}</span>
+    </li>`).join("") : `<li class="noalert">Aucun staff programmé à une date future.</li>`;
+}
+
+/* ---------- Init ---------- */
+function refreshAll(){
+  fillSelect("fStatut",[...new Set(patients.map(p=>p.statut).filter(Boolean))].sort(),"Tous les statuts");
+  fillSelect("fCat",[...new Set(patients.map(p=>p.cat).filter(Boolean))].sort(),"Toutes catégories");
+  renderChips();
+  renderList();
+  if($("panel-dash").classList.contains("active")) renderDash();
+}
+$("search").addEventListener("input", renderList);
+["fStatut","fCat","fCathe"].forEach(id=>$(id).addEventListener("change", renderList));
+refreshAll();
+</script>
+</body>
+</html>
